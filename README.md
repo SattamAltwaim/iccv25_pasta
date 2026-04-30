@@ -73,10 +73,10 @@ sh train.sh
 
 We provide the following resources for reproducing our results and running inference:
 
-- 🔗 **Pretrained Checkpoint**: [Download model checkpoint](https://kuaicv.synology.me/iccv2025/PASTA/model)  
+- 🔗 **Pretrained Checkpoint**: [Download model checkpoint](https://kuaicv.synology.me/weights/iccv2025/PASTA/model)  
   Use this for testing and inference with `eval.py`.
 
-- 📝 **AmateurSketch-3D LLaVA Features**: [Download shapenet_amateur.zip](https://kuaicv.synology.me/iccv2025/PASTA/shapenet_amateur.zip)  
+- 📝 **AmateurSketch-3D LLaVA Features**: [Download shapenet_amateur.zip](https://kuaicv.synology.me/weights/iccv2025/PASTA/shapenet_amateur.zip)
   This zip file contains LLaVA-7B features for the AmateurSketch-3D dataset used in our evaluation.
 
 
