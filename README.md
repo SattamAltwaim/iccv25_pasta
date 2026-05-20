@@ -85,9 +85,10 @@ We provide the following resources for reproducing our results and running infer
 If you find our work useful in your research, please consider citing:
 
 ```bibtex
-@article{lee2025pasta,
-  title={PASTA: Part-Aware Sketch-to-3D Shape Generation with Text-Aligned Prior},
-  author={Lee, Seunggwan and Jung, Hwanhee and Koh, Byoungsoo and Huang, Qixing and Yoon, Sangho and Kim, Sangpil},
-  journal={arXiv preprint arXiv:2503.12834},
+@inproceedings{lee2025pasta,
+  title={Pasta: Part-aware sketch-to-3d shape generation with text-aligned prior},
+  author={Lee, Seunggwan and Jung, Hwanhee and Koh, Byoungsoo and Huang, Qixing and Yoon, Sang Ho and Kim, Sangpil},
+  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages={18585--18595},
   year={2025}
 }
