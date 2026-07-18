@@ -3,6 +3,7 @@ from custom_types import *
 from utils import files_utils, edge_detection, rotation_utils, svg_utils
 import options
 import constants
+import os
 import torchvision
 import subprocess
 import io
@@ -151,7 +152,8 @@ class ClipassoDs(Dataset):
         self.size_random = 10000
         self.random_array = np.random.rand(self.size_random)
         self.cur_rand = mp.Value('i', -1)
-        self.llava_base_dir = '/home/cvlab/PASTA_llava/chair_llava_feat/clipasso' # clipasso llava_base_dir
+        self.llava_base_dir = os.environ.get(
+            'PASTA_LLAVA_CLIPASSO', f'{constants.DATA_ROOT}/chair_llava_feat/clipasso')  # clipasso llava_base_dir
 
         # load dist adj
         dist_adj_path = f'{constants.DATA_ROOT}dataset_chair_preprocess/chairs_mu_distances.npy'

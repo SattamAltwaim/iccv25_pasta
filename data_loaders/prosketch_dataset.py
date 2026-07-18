@@ -3,6 +3,7 @@ from custom_types import *
 from utils import files_utils
 import options
 import constants
+import os
 import torchvision
 import matplotlib.pyplot as plt
 from data_loaders import augment_clipcenter
@@ -107,7 +108,8 @@ class ProsketchDs(Dataset):
         self.random_array = np.random.rand(self.size_random)
         self.cur_rand = mp.Value('i', -1)
         self.augmentation = True
-        self.llava_base_dir = '/home/cvlab/PASTA_llava/chair_llava_feat/prosketch/original' # prosketch llava_base_dir
+        self.llava_base_dir = os.environ.get(
+            'PASTA_LLAVA_PROSKETCH', f'{constants.DATA_ROOT}/chair_llava_feat/prosketch/original')  # prosketch llava_base_dir
 
         # load dist adj
         dist_adj_path = f'{constants.DATA_ROOT}dataset_chair_preprocess/chairs_mu_distances.npy'

@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import trimesh
 
+import constants
 from data_loaders import augment_clipcenter
 
 
@@ -14,7 +15,8 @@ class AmateurSketchDataset(Dataset):
         self.data_root = data_root
         self.all_files = sorted(glob(self.data_root + '/*'))
         self.all_sketches = sorted(glob(self.data_root + '/*/*.png'))
-        self.llava_base_dir = '/home/cvlab/chair_llava_feat/shapenet_amateur' # AmateurSketchDataset llava_base_dir
+        self.llava_base_dir = os.environ.get(
+            'PASTA_LLAVA_AMATEUR', f'{constants.DATA_ROOT}/chair_llava_feat/shapenet_amateur')  # AmateurSketchDataset llava_base_dir
 
 
     def __len__(self):

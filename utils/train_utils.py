@@ -42,7 +42,9 @@ def load_model(opt, device, suffix: str = '', override_model: Optional[str] = No
         print(f'loading {name} model from {model_path}')
 
         if name != 'occ_gmm':
-            state_dict = torch.load(model_path, map_location=device)
+            # map_location='cpu': the released checkpoint (~8.4GB) includes optimizer/scheduler
+            # states; loading them straight onto the GPU wastes VRAM.
+            state_dict = torch.load(model_path, map_location='cpu', weights_only=False)
             print("model path", model_path)
             print("state_dict", state_dict.keys())
             model_dict = state_dict['model']
@@ -52,7 +54,7 @@ def load_model(opt, device, suffix: str = '', override_model: Optional[str] = No
             model.load_state_dict(model_dict)
             return model, optimizer_dict, scheduler_dict, epoch
         else:
-            model.load_state_dict(torch.load(model_path, map_location=device))
+            model.load_state_dict(torch.load(model_path, map_location=device, weights_only=False))
             return model, None, None, 0
 
     else:
@@ -94,7 +96,7 @@ def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tupl
         elif os.path.isfile(model_path):
             print(f'model is corrupted')
             print(f'loading {opt.model_name} model from {model_path}')
-            model.load_state_dict(torch.load(model_path, map_location=opt.device))
+            model.load_state_dict(torch.load(model_path, map_location=opt.device, weights_only=False))
         return True
 
     already_init = False

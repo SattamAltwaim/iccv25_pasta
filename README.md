@@ -4,6 +4,27 @@
 
 ![PASTA teaser](fig/teaser.png)
 
+> **This fork** ([SattamAltwaim/iccv25_pasta](https://github.com/SattamAltwaim/iccv25_pasta), upstream: [kuai-lab/iccv25_pasta](https://github.com/kuai-lab/iccv25_pasta)) adds a Colab-based reproduction pipeline as groundwork for finetuning PASTA on the Fusion360 Gallery dataset.
+
+## Run on Google Colab
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SattamAltwaim/iccv25_pasta/blob/main/colab/PASTA_colab.ipynb)
+
+[`colab/PASTA_colab.ipynb`](colab/PASTA_colab.ipynb) sets everything up end to end on a free T4 runtime:
+
+- downloads the **PASTA checkpoint** (8.4 GB), the **SPAGHETTI backbone** (`occ_gmm_chairs_sym_hard`, from the SENS release), the **LLaVA eval features**, and the **SENS preprocessed chair training set** — all persisted to `Google Drive/PASTA/` (needs ~13 GB free; every download is resumable and skipped once present);
+- symlinks the repo's `assets/` to Drive/local storage and runs a sketch→mesh **smoke test** (`run.py --input sketch.png`);
+- documents the manual, license-gated AmateurSketch-3D + ShapeNet eval setup;
+- can **push run artifacts back to this repo** (`colab_runs/<timestamp>/`) via a `GITHUB_TOKEN` Colab secret, so Colab runs show up locally with a plain `git pull`.
+
+### Fork changes vs. upstream
+
+- `utils/utils.py` — added `scale_to_unit_sphere` (imported by `eval.py` but missing from the upstream release).
+- `torch.load(..., weights_only=False)` in the checkpoint loaders (required on PyTorch ≥ 2.6, e.g. Colab); the big sketch-model checkpoint is now loaded via CPU RAM instead of straight onto the GPU.
+- The hardcoded `/home/cvlab/...` LLaVA feature paths in `data_loaders/` now default to `assets/data/chair_llava_feat/...` and can be overridden with the env vars `PASTA_LLAVA_AMATEUR` / `PASTA_LLAVA_NPR` / `PASTA_LLAVA_CLIPASSO` / `PASTA_LLAVA_PROSKETCH`.
+- `scripts/compute_mu_distances.py` — best-effort reconstruction of the unreleased training files `chairs_mu_distances{,_part}.npy`.
+- `assets/{checkpoints,data,output}` are gitignored (they live on Drive when running in Colab).
+
 ## Abstract
 A fundamental challenge in conditional 3D shape generation is to minimize the information loss and maximize the intention of user input. Existing approaches have predominantly focused on two types of isolated conditional signals, i.e., user sketches and text descriptions, each of which does not offer flexible control of the generated shape. In this paper, we introduce PASTA, the flexible approach that seamlessly integrates a user sketch and a text description for 3D shape generation. The key idea is to use text embeddings from a vision-language model to enrich the semantic representation of sketches. Specifically, these text-derived priors specify the part components of the object, compensating for missing visual cues from ambiguous sketches. In addition, we introduce ISG-Net which employs two types of graph convolutional networks: IndivGCN, which processes fine-grained details, and PartGCN, which aggregates these details into parts and refines the structure of objects. Extensive experiments demonstrate that PASTA outperforms existing methods in part-level editing and achieves state-of-the-art results in sketch-to-3D shape generation.
 

@@ -529,7 +529,7 @@ def save_model(model: Union[Optimizer, nn.Module], model_path: str):
 
 def load_model(model: Union[Optimizer, nn.Module], model_path: str, device: D, verbose: bool = False):
     if os.path.isfile(model_path):
-        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.load_state_dict(torch.load(model_path, map_location=device, weights_only=False))
         if verbose:
             print(f'loading {type(model).__name__} from {model_path}')
     elif verbose:
