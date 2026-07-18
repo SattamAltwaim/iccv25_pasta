@@ -51,7 +51,14 @@ def load_model(opt, device, suffix: str = '', override_model: Optional[str] = No
             optimizer_dict = state_dict['optimizer']
             scheduler_dict = state_dict['scheduler']
             epoch = state_dict['epoch']
-            model.load_state_dict(model_dict)
+            # The released PASTA checkpoint carries vestigial keys (e.g.
+            # 'adjacency_matrix_parts_lean') with no counterpart in the released
+            # model class. Ignore extras, but missing weights are still fatal.
+            incompatible = model.load_state_dict(model_dict, strict=False)
+            if incompatible.missing_keys:
+                raise RuntimeError(f'checkpoint is missing model weights: {incompatible.missing_keys}')
+            if incompatible.unexpected_keys:
+                print(f'ignoring unexpected checkpoint keys: {incompatible.unexpected_keys}')
             return model, optimizer_dict, scheduler_dict, epoch
         else:
             model.load_state_dict(torch.load(model_path, map_location=device, weights_only=False))
