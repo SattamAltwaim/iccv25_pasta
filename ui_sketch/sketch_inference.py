@@ -1,3 +1,4 @@
+import os
 import torch
 
 from custom_types import *
@@ -98,6 +99,17 @@ class SketchInference:
         return self.get_mesh()
 
     def __init__(self, opt: SketchOptions):
+        # Without these files Options.load() silently falls back to defaults
+        # (dataset_size=-1) and load_model() silently initializes random
+        # weights, so fail fast with a pointer instead.
+        spaghetti_cp = f'{constants.CHECKPOINTS_ROOT}occ_gmm_{opt.spaghetti_tag}'
+        for required in (f'{spaghetti_cp}/options.pkl', f'{spaghetti_cp}/model', f'{opt.cp_folder}/model'):
+            if not os.path.isfile(required):
+                raise FileNotFoundError(
+                    f'missing checkpoint file: {required}\n'
+                    'assets/checkpoints is not wired to the downloaded weights. In Colab, '
+                    'run the "Session restore" cells of colab/PASTA_colab.ipynb — the Drive '
+                    'mount and assets/ symlinks must be recreated after every reconnect.')
         self.spaghetti = occ_inference.Inference(Options(tag=opt.spaghetti_tag).load())
         self.opt = opt
         model, opt, optimizer_dict, scheduler_dict, epoch = train_utils.model_lc(opt)
